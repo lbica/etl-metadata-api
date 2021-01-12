@@ -1,0 +1,10 @@
+{
+  "mailgun_failed_load_api_key": "Failed to load MailGun API key",
+  "mailgun_failed_load_mailgun_url": "Failed to load MailGun URL",
+  "mailgun_error_sending_email": "Error sending email confirmation, user confirmation failed.",
+  "confirmation_not_found": "Confirmation reference not found.",
+  "confirmation_expired": "The link has expired",
+  "confirmation_already_confirmed": "Registration has been already confirmed.",
+  "confirmation_resend_successful": "Email confirmation successfully re-sent.",
+  "confirmation_resend_fail": "Internal server error. Failed to resend the confirmation email."
+}
