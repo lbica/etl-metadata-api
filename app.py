@@ -1,10 +1,8 @@
-import os
-
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
-from flask_migrate import Migrate
+# from flask_migrate import Migrate
 from marshmallow import ValidationError
 # from flask_uploads import configure_uploads, patch_request_class
 
@@ -14,7 +12,10 @@ from db import db
 from ma import ma
 # from oa import oauth
 
-# from resources.user import UserRegister, UserLogin, UserLogout, TokenRefresh, User, SetPassword
+
+from resources.user import UserRegister, User, UserLogin
+
+# , UserLogin, UserLogout, TokenRefresh, User, SetPassword
 # from resources.item import Item, ItemList
 # from resources.store import Store, StoreList
 # from resources.confirmation import Confirmation, ConfirmationByUser
@@ -22,6 +23,8 @@ from ma import ma
 # from resources.github_login import GithubLogin, GithubAuthorize
 # from resources.order import Order
 # from libs.image_helper import IMAGE_SET
+from resources.log import Log
+from resources.test import Test
 
 
 app = Flask(__name__)
@@ -43,8 +46,9 @@ def create_tables():
 def handle_marshmallow_validation(err):  # except ValidationError as err
     return jsonify(err.message)
 
+# old approach jwt = JWT(app, authenticate, identify)  # /auth end point
 
-jwt = JWTManager(app)  # /auth
+jwt = JWTManager(app)
 # migrate = Migrate(app, db)
 
 
@@ -59,10 +63,11 @@ def check_if_token_in_blacklist(decrypted_token):
 # api.add_resource(Item, '/item/<string:name>')
 # api.add_resource(ItemList, '/items')
 # api.add_resource(UserRegister, '/user/register')
-# api.add_resource(UserLogin, '/user/login')
-# api.add_resource(User, '/user/<int:user_id>')
+api.add_resource(UserRegister, '/user/register')
+api.add_resource(User, '/user/<int:user_id>')
 # api.add_resource(TokenRefresh, '/refresh')
 # api.add_resource(UserLogout, '/logout')
+api.add_resource(UserLogin, '/user/login')
 # api.add_resource(Confirmation, '/user_confirmation/<string:confirmation_id>')
 # api.add_resource(ConfirmationByUser, '/confirmation/user/<int:user_id>')
 # api.add_resource(ImageUpload, '/upload/image')
@@ -73,9 +78,11 @@ def check_if_token_in_blacklist(decrypted_token):
 # api.add_resource(GithubAuthorize, '/login/github/authorized', endpoint="github.authorize")
 # api.add_resource(SetPassword, '/user/password')
 # api.add_resource(Order, '/order')
+api.add_resource(Log, '/logs')
+api.add_resource(Test, '/tests')
 
 if __name__ == '__main__':
     db.init_app(app)
-    ma.init_app(app)
+    # ma.init_app(app)
     # oauth.init_app(app)
     app.run(port=5000, debug=True)

@@ -1,6 +1,7 @@
 import traceback
 from collections import Counter
 from flask import request
+from flask_jwt_extended import fresh_jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
 from stripe import error
@@ -24,7 +25,7 @@ class Log(Resource):
         return {"message": "Get succesfull."}, 200
 
     @classmethod
-
+    @fresh_jwt_required
     def post(cls):
         """
         Expect a project_name, module_name, log_type, log_message, order_date, dataset_name,ins_count (default is 0),

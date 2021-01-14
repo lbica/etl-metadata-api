@@ -32,8 +32,8 @@ class LogSchema(Schema):
 
     @post_load
     def create_log(self, data, **kwargs):
-        log = LogModel(**data)
-        return log
+        instance = LogModel(**data)
+        return instance
 
 
 

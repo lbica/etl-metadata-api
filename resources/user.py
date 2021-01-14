@@ -3,7 +3,7 @@ import traceback
 from flask_jwt_extended import create_access_token, create_refresh_token, get_raw_jwt, get_jwt_identity, jwt_required, \
     jwt_refresh_token_required, fresh_jwt_required
 from flask_restful import Resource
-from flask import request, make_response, render_template
+from flask import request, make_response, render_template, g
 from werkzeug.security import safe_str_cmp
 
 from models.confirmation import ConfirmationModel
@@ -56,14 +56,14 @@ class UserRegister(Resource):
         if UserModel.find_by_username(user.username):
             return {"message": USER_ALREADY_EXISTS}, 400
 
-        if UserModel.find_by_email(user.email):
-            return {"message": EMAIL_ALREADY_EXISTS}, 400
+        # if UserModel.find_by_email(user.email):
+        #     return {"message": EMAIL_ALREADY_EXISTS}, 400
 
         try:
             user.save_to_db()
-            confirmation = ConfirmationModel(user.id)
-            confirmation.save_to_db()
-            user.send_confirmation_email()
+            # confirmation = ConfirmationModel(user.id)
+            # confirmation.save_to_db()
+            # user.send_confirmation_email()
             return {"message": SUCCESS_REGISTER_USER}, 201
         except MailGunException as ex:
             user.delete_from_db()  # rollback
@@ -114,12 +114,16 @@ class UserLogin(Resource):
 
         # this is what 'authenticate()' function did in security.py
         if user and user.password and safe_str_cmp(user.password, user_data.password):
-            confirmation = user.most_recent_confirmation
-            if confirmation and confirmation.confirmed:
-                access_token = create_access_token(identity=user.id, fresh=True)
-                refresh_token = create_refresh_token(identity=user.id)
-                return {"access_token": access_token, "refresh_token": refresh_token}, 200
-            return {"message": NOT_CONFIRMED_ERROR.format(user.username)}, 400
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(identity=user.id)
+            return {"access_token": access_token, "refresh_token": refresh_token}, 200
+
+            # confirmation = user.most_recent_confirmation
+            # if confirmation and confirmation.confirmed:
+            #     access_token = create_access_token(identity=user.id, fresh=True)
+            #     refresh_token = create_refresh_token(identity=user.id)
+            #     return {"access_token": access_token, "refresh_token": refresh_token}, 200
+            # return {"message": NOT_CONFIRMED_ERROR.format(user.username)}, 400
 
         return {"message": INVALID_CREDENTIALS}, 401
 
