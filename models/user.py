@@ -15,16 +15,18 @@ class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
-    # email = db.Column(db.String(80), nullable=False, unique=True)
+    email = db.Column(db.String(80), nullable=False, unique=True)
+    # activated = db.Column(db.Boolean, default=False)
 
     confirmation = db.relationship (
         "ConfirmationModel", lazy="dynamic", cascade="all, delete-orphan"
     )
 
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, **kwargs):
+        super().__init__(**kwargs)
         self.username = username
         self.password = password
-        
+
     @property
     def most_recent_confirmation(self) -> "ConfirmationModel":
         return self.confirmation.order_by(db.desc(ConfirmationModel.expire_at)).first()
@@ -43,10 +45,11 @@ class UserModel(db.Model):
         return cls.query.filter_by(id=_id).first()
 
     def send_confirmation_email(self) -> Response:
+        subject = "Registration confirmation"
         link = request.url_root[:-1] + url_for(
             "confirmation", confirmation_id=self.most_recent_confirmation.id
         )
-        subject = "Registration confirmation"
+
         text = f"Please click the link to confirm your registration: {link}"
         html = f'<html>Please click the link to confirm your registration: <a href="{link}"> {link}</a></html>'
 

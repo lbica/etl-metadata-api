@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from flask_jwt_extended import jwt_required, fresh_jwt_required
+from flask_jwt_extended import jwt_required, fresh_jwt_required, jwt_optional, get_jwt_identity
 from marshmallow import ValidationError
 from models.item import ItemModel
 from schemas.item import ItemSchema
@@ -83,5 +83,7 @@ class Item(Resource):
 class ItemList(Resource):
 
     @classmethod
+    @jwt_optional
     def get(cls):
+        user_id = get_jwt_identity()
         return {'items': item_list_schema.dump(ItemModel.find_all())}, 200

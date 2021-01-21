@@ -2,19 +2,27 @@
   "mailgun_failed_load_api_key": "Failed to load MailGun API key",
   "mailgun_failed_load_mailgun_url": "Failed to load MailGun URL",
   "mailgun_error_sending_email": "Error sending email confirmation, user confirmation failed.",
+
   "confirmation_not_found": "Confirmation reference not found.",
   "confirmation_expired": "The link has expired",
   "confirmation_already_confirmed": "Registration has been already confirmed.",
   "confirmation_resend_successful": "Email confirmation successfully re-sent.",
   "confirmation_resend_fail": "Internal server error. Failed to resend the confirmation email.",
+
   "image_uploaded": "Image {} uploaded.",
   "image_illegal_extension": "Extension {} is not allowed.",
   "image_illegal_filename": "Illegal file name {}.",
   "image_not_found": "Image {} not found.",
   "image_deleted": "Image {} deleted.",
   "image_deleted_failed": "Internal server error! Failed to delete image.",
+
   "avatar_deleted_failed": "Internal server error! Failed to put avatar image.",
+
   "log_inserted_error": "Internal server error! Failed to insert a log entry.",
   "log_inserted_validation_error": "Error validation in log insert: {}",
-  "log_inserted_successful": "Inserted a log entry."
+  "log_inserted_successful": "Inserted a log entry.",
+  "log_deleted": "Log deleted.",
+  "log_not_found": "Log {} not found.",
+
+  "admin_privileges_required": "Admin privileges required."
 }

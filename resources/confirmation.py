@@ -14,7 +14,6 @@ from libs.strings import gettext
 confirmation_schema = ConfirmationSchema()
 
 
-
 class Confirmation(Resource):
     @classmethod
     def get(cls, confirmation_id: int):
@@ -71,15 +70,15 @@ class ConfirmationByUser(Resource):
             confirmation = user.most_recent_confirmation()
             if confirmation:
                 if confirmation.confirmed:
-                    return {"message": ALREADY_CONFIRMED}
+                    return {"message": gettext("confirmation_already_confirmed")}
                 confirmation.force_to_expire()
 
             new_confirmation = ConfirmationModel(user_id)
             new_confirmation.save_to_db()
             user.send_confirmation_email()
-            return {"message": RESEND_SUCCESSFUL}, 201
+            return {"message": gettext("confirmation_resend_successful")}, 201
         except MailGunException as ex:
             return {"message": str(ex)}, 500
         except:
             traceback.print_exc()
-            return {"message": RESEND_FAIL}
+            return {"message": gettext("confirmation_resend_fail")}

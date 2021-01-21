@@ -7,11 +7,12 @@ from models.user import UserModel
 class UserSchema(ma.Schema):
     class Meta:
         model = UserModel
-        load_only = ("password",)
-        # dump_only = ("id", "confirmation",)
+        # load_only = ("password",)
+        # dump_only = ("id", "activated",)
 
     username = fields.Str(load_only=True)
     password = fields.Str(load_only=True)
+    email = fields.Str(load_only=True)
 
     # @pre_dump
     # def __pre_dump(self, user: UserModel):

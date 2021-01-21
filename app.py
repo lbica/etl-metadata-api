@@ -4,7 +4,9 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 # from flask_migrate import Migrate
 from marshmallow import ValidationError
+
 # from flask_uploads import configure_uploads, patch_request_class
+from blacklist import BLACKLIST
 
 load_dotenv(".env", verbose=True)
 
@@ -12,8 +14,13 @@ from db import db
 from ma import ma
 # from oa import oauth
 
-
-from resources.user import UserRegister, User, UserLogin
+from resources.user import (
+    UserRegister,
+    User,
+    UserLogin,
+    UserLogout,
+    UserConfirm
+)
 
 # , UserLogin, UserLogout, TokenRefresh, User, SetPassword
 # from resources.item import Item, ItemList
@@ -25,7 +32,6 @@ from resources.user import UserRegister, User, UserLogin
 # from libs.image_helper import IMAGE_SET
 from resources.log import Log
 from resources.test import Test
-
 
 app = Flask(__name__)
 
@@ -46,16 +52,62 @@ def create_tables():
 def handle_marshmallow_validation(err):  # except ValidationError as err
     return jsonify(err.message)
 
+
 # old approach jwt = JWT(app, authenticate, identify)  # /auth end point
 
 jwt = JWTManager(app)
+
+
 # migrate = Migrate(app, db)
+
+
+@jwt.user_claims_loader
+def add_claims_to_jwt(identity):
+    if identity == 1:
+        return {"is_admin": True}
+    return {"is_admin": False}
+
+
+@jwt.expired_token_loader
+def expired_token_callback():
+    return jsonify({
+        "description": "The token has expired.",
+        "error": "token_expired"
+    }
+    ), 401
+
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({
+        "description": "Signature verification failed",
+        "error": "invalid_token"
+    }
+    ), 401
+
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return jsonify({
+        "description": "Request doesn't contains an access token.",
+        "error": "authorization_required"
+    }
+    ), 401
 
 
 # this method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
-    return decrypted_token["jti"] in []
+    return decrypted_token["jti"] in BLACKLIST
+
+
+@jwt.revoked_token_loader
+def revoked_token_callback():
+    return jsonify({
+        "description": "The token was revoked.",
+        "error": "token_revoked"
+    }
+    ), 401
 
 
 # api.add_resource(Store, '/store/<string:name>')
@@ -66,8 +118,9 @@ def check_if_token_in_blacklist(decrypted_token):
 api.add_resource(UserRegister, '/user/register')
 api.add_resource(User, '/user/<int:user_id>')
 # api.add_resource(TokenRefresh, '/refresh')
-# api.add_resource(UserLogout, '/logout')
+api.add_resource(UserLogout, '/user/logout')
 api.add_resource(UserLogin, '/user/login')
+api.add_resource(UserConfirm, '/user/confirm/<int:user_id>')
 # api.add_resource(Confirmation, '/user_confirmation/<string:confirmation_id>')
 # api.add_resource(ConfirmationByUser, '/confirmation/user/<int:user_id>')
 # api.add_resource(ImageUpload, '/upload/image')

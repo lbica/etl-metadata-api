@@ -1,7 +1,7 @@
 import traceback
 from collections import Counter
 from flask import request
-from flask_jwt_extended import fresh_jwt_required
+from flask_jwt_extended import fresh_jwt_required, jwt_required, get_jwt_claims
 from flask_restful import Resource
 from marshmallow import ValidationError
 from stripe import error
@@ -22,10 +22,10 @@ class Log(Resource):
     def get(cls):
         # return multiple_order_schema.dump(OrderModel.find_all()), 200
         # return log_schema.dump(LogModel.find_all(), many=True), 200
-        return {"message": "Get succesfull."}, 200
+        return {"message": "Get successfully."}, 200
 
     @classmethod
-    @fresh_jwt_required
+    @jwt_required
     def post(cls):
         """
         Expect a project_name, module_name, log_type, log_message, order_date, dataset_name,ins_count (default is 0),
@@ -54,6 +54,20 @@ class Log(Resource):
             return {"message": gettext("log_inserted_error")}, 500
 
         return {"message": gettext("log_inserted_successful")}, 201
+
+    @classmethod
+    @fresh_jwt_required
+    def delete(cls, name: str):
+        claims = get_jwt_claims()
+        if not claims["is_admin"]:
+            return {'message': gettext("admin_privileges_required")}, 401
+
+        log = LogModel.find_by_name(name)
+        if log:
+            log.delete_from_db()
+            return {'message': gettext("log_deleted")}, 200
+
+        return {'message': gettext("log_not_found")}, 404
 
     # @classmethod
     # def post(cls):

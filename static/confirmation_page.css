@@ -1,5 +1,5 @@
 .full-height {
-    height: 80vh;
+    height: 80vh; <!--80% from browser height-->
     margin: 10px;
     background-color: aquamarine;
 }
