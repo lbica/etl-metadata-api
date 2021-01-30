@@ -3,6 +3,7 @@ from time import time
 
 from flask import make_response, render_template
 from flask_restful import Resource
+from mysql.connector.utils import _get_unicode_read_direction
 
 from libs.mailgun import MailGunException
 from models.confirmation import ConfirmationModel
@@ -48,11 +49,13 @@ class ConfirmationByUser(Resource):
         if not user:
             return {"message": USER_NOT_FOUND}
 
+        confirmations = [each for each in user.confirmation.order_by(ConfirmationModel.expire_at.desc(),)]
+
         return (
             {
                 "current_time": int(time()),
                 "confirmation": [
-                    confirmation_schema.dump(each) for each in user.confirmation.order_by(ConfirmationModel.expire_at)
+                    confirmation_schema.dump(confirmations, many=True)
                 ],
             },
             200
@@ -67,7 +70,7 @@ class ConfirmationByUser(Resource):
             return {"message": USER_NOT_FOUND}
 
         try:
-            confirmation = user.most_recent_confirmation()
+            confirmation = user.most_recent_confirmation
             if confirmation:
                 if confirmation.confirmed:
                     return {"message": gettext("confirmation_already_confirmed")}

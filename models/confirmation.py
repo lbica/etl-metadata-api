@@ -18,7 +18,7 @@ class ConfirmationModel(db.Model):
         super().__init__(**kwargs)
         self.user_id = user_id
         self.id = uuid4().hex
-        self.expire_at = int(time()) + os.environ.get("CONFIRMATION_EXPIRATION_DELTA")  # can be None
+        self.expire_at = int(time()) + int(os.environ.get("CONFIRMATION_EXPIRATION_DELTA"))  # can be None
         # self.confirmed = False
 
     @classmethod

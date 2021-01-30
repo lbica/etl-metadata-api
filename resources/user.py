@@ -28,7 +28,7 @@ EMAIL_ALREADY_EXISTS = "A user created with that email already exists."
 USER_NOT_FOUND = "User not found."
 USER_DELETED = "User deleted."
 INVALID_CREDENTIALS = "Invalid credentials."
-USER_LOGGED_OUT = "User <id={user_id}> successfully logged out."
+USER_LOGGED_OUT = "User <id={}> successfully logged out."
 NOT_CONFIRMED_ERROR = "You have not confirmed the registration, please check your email <{}>."
 USER_CONFIRMED = "User confirmed."
 FAILED_TO_CREATE = "Internal server error. Failed to create user."
@@ -92,8 +92,22 @@ class User(Resource):
     @classmethod
     def get(cls, user_id: int):
         user = UserModel.find_by_id(user_id)
-        if not user_id:
+        if not user:
             return {"message": USER_NOT_FOUND}, 404
+
+
+        # confirmations = [each for each in user.confirmation.order_by(ConfirmationModel.expire_at.desc(),)]
+
+        # return (
+        #     {
+        #         "user_name"
+        #         "current_time": int(time()),
+        #         "confirmation": [
+        #             confirmation_schema.dump(confirmations, many=True)
+        #         ],
+        #     },
+        #     200
+        # )
 
         return user_schema.dump(user), 200
 

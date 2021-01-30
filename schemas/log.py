@@ -31,9 +31,9 @@ class LogSchema(Schema):
     # order_datef = fields.Function(lambda obj: datetime.strptime(obj.order_date, '%Y%m%d'))
 
     @post_load
-    def create_log(self, data, **kwargs):
-        instance = LogModel(**data)
-        return instance
+    def __post_load(self, data, **kwargs):
+        log = LogModel(**data)
+        return log
 
 
 
