@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
-from flask_migrate import Migrate, MigrateCommand, Manager
+
 from marshmallow import ValidationError
 
 # from flask_uploads import configure_uploads, patch_request_class
@@ -119,6 +119,7 @@ api.add_resource(Log, '/logs')
 
 # if __name__ != '__main__':
 #     from db import db
+#     from flask_migrate import Migrate
 #     db.init_app(app)
 #     migrate = Migrate(app, db)
 
