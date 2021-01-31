@@ -9,7 +9,7 @@ from marshmallow import ValidationError
 from blacklist import BLACKLIST
 
 
-from db import db
+# from db import db
 # from ma import ma
 # from oa import oauth
 
@@ -115,14 +115,16 @@ api.add_resource(ConfirmationByUser, '/user/confirmation/<int:user_id>')
 # api.add_resource(SetPassword, '/user/password')
 # api.add_resource(Order, '/order')
 api.add_resource(Log, '/logs')
-api.add_resource(Test, '/tests')
 
-if __name__ != '__main__':
-    db.init_app(app)
-    migrate = Migrate(app, db)
+
+# if __name__ != '__main__':
+#     from db import db
+#     db.init_app(app)
+#     migrate = Migrate(app, db)
 
 
 if __name__ == '__main__':
+    from db import db
     db.init_app(app)
     # ma.init_app(app)
     # oauth.init_app(app)
