@@ -3,3 +3,9 @@ Flask-RESTful
 Flask-JWT
 Flask-SQLAlchemy
 uwsgi
+
+requests
+Werkzeug
+python-dotenv
+marshmallow
+stripe
