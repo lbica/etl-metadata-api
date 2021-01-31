@@ -20,7 +20,7 @@ from resources.confirmation import Confirmation, ConfirmationByUser
 # from resources.order import Order
 # from libs.image_helper import IMAGE_SET
 from resources.log import Log
-from resources.test import Test
+
 
 load_dotenv(".env", verbose=True)
 
