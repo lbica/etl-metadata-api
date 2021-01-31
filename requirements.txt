@@ -1,6 +1,7 @@
 Flask
 Flask-RESTful
 Flask-JWT
+Flask-JWT-Extended
 Flask-SQLAlchemy
 uwsgi
 
@@ -9,3 +10,6 @@ Werkzeug
 python-dotenv
 marshmallow
 stripe
+SQLAlchemy
+mysql-connector-python
+alembic
