@@ -9,6 +9,7 @@ requests
 Werkzeug
 python-dotenv
 marshmallow
+flask-marshmallow
 stripe
 SQLAlchemy
 mysql-connector-python

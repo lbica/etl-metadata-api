@@ -1,10 +1,4 @@
-from datetime import datetime
-
-
 from marshmallow import fields, Schema, EXCLUDE, post_load
-
-from ma import ma
-
 
 from models.log import LogModel
 
